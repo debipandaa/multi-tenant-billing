@@ -18,3 +18,4 @@ public class PricingRuleDto {}
 // Auto-generated change #6
 // Auto-generated change #22
 // Auto-generated change #14
+// Auto-generated change #15
