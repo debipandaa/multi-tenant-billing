@@ -27,3 +27,4 @@ public class ApiException extends RuntimeException {
 // Auto-generated change #56
 // Auto-generated change #60
 // Auto-generated change #79
+// Auto-generated change #82
