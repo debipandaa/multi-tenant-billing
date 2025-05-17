@@ -4,7 +4,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import com.debii.metering_billing.dto.UsageEventRequest;
-import com.debii.metering_billing.model.UsageEvent;
+import com.debii.metering_billing.entity.UsageEvent;
 
 import reactor.core.publisher.Mono;
 import java.time.Instant;
