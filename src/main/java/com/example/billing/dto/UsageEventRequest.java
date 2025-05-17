@@ -63,3 +63,4 @@ public class UsageEventRequest {
 // Auto-generated change #59
 // Auto-generated change #75
 // Auto-generated change #83
+// Auto-generated change #99
