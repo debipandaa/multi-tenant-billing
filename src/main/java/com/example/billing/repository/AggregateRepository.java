@@ -37,3 +37,4 @@ public interface AggregateRepository extends JpaRepository<Aggregate, AggregateI
 // minor edit 8104
 // Auto-generated change #16
 // Auto-generated change #4
+// Auto-generated change #65
