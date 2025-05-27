@@ -1,7 +1,7 @@
 -- V1__create_usage_events_table.sql
 
 CREATE TABLE usage_events (
-    id UUID PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tenant_id UUID NOT NULL,
     user_id UUID,
     metric VARCHAR(255) NOT NULL,
