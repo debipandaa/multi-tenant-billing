@@ -19,3 +19,4 @@ ALTER TABLE aggregates ADD UNIQUE KEY uniq_agg (tenant_id, metric, period_start)
 // Auto-generated change #79
 // Auto-generated change #83
 // Auto-generated change #7
+// Auto-generated change #41
