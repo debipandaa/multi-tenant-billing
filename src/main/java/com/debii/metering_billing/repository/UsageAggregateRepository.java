@@ -5,6 +5,8 @@ import org.springframework.data.r2dbc.repository.Modifying;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
+
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
@@ -25,4 +27,6 @@ public interface UsageAggregateRepository extends R2dbcRepository<UsageAggregate
             "WHERE tenant_id = :tenantId AND metric = :metric AND period_start = :periodStart")
     Mono<Long> incrementUsage(UUID tenantId, String metric, Instant periodStart, long amount);
 
+    @Query("SELECT * FROM aggregates WHERE tenant_id = :tenantId AND metric = :metric AND period_start >= :since")
+    Flux<UsageAggregate> findByTenantAndMetricSince(UUID tenantId, String metric, Instant since);
 }
