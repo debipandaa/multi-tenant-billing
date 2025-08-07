@@ -38,3 +38,4 @@ public class JsonMapConverter implements AttributeConverter<Map<String, Object>,
 // Auto-generated change #80
 // minor edit 8510
 // Auto-generated change #6
+// Auto-generated change #69
