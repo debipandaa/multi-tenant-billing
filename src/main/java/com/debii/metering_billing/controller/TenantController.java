@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/tenants")
+@RequestMapping("/api/tenants")
 public class TenantController {
 
     private final TenantService tenantService;
