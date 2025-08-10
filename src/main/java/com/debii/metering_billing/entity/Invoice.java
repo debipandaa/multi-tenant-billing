@@ -2,6 +2,9 @@ package com.debii.metering_billing.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
+
+import io.r2dbc.postgresql.codec.Json;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
@@ -15,7 +18,7 @@ public record Invoice(
         Instant periodEnd,
         BigDecimal totalAmount,
         String status,
-        String lineItemsJson,
+        Json lineItemsJson,
         String pdfUrl,
         Instant issuedAt) {
     // Helper method to update the PDF URL since records are immutable
