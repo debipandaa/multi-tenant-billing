@@ -1,7 +1,9 @@
 package com.debii.metering_billing.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.debii.metering_billing.dto.InvoicePreview;
+
+import io.r2dbc.postgresql.codec.Json;
+
 import com.debii.metering_billing.entity.Invoice;
 import com.debii.metering_billing.entity.Tenant;
 import com.debii.metering_billing.repository.InvoiceRepository;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class BillingRunService {
@@ -40,14 +43,57 @@ public class BillingRunService {
     public void runMonthlyBilling() {
         log.info("Starting monthly billing run...");
         tenantRepository.findAll()
-                .cast(Tenant.class)
-                .flatMap(tenant -> pricingService.generateInvoicePreview(tenant.getId()))
+                .flatMap(this::generateInvoiceForTenant) // <-- REFACTORED
+                .subscribe(
+                        finalInvoice -> log.info("Successfully generated invoice {} for tenant {}", finalInvoice.id(),
+                                finalInvoice.tenantId()),
+                        error -> log.error("Error during billing run", error));
+
+        /*
+         * tenantRepository.findAll()
+         * .cast(Tenant.class)
+         * .flatMap(tenant -> pricingService.generateInvoicePreview(tenant.getId()))
+         * .flatMap(preview -> {
+         * try {
+         * String lineItemsJson = objectMapper.writeValueAsString(preview.lineItems());
+         * Invoice invoice = new Invoice(null, preview.tenantId(), null, // planId can
+         * be added
+         * Instant.now().minusSeconds(2592000), Instant.now(), // Dummy period
+         * preview.totalAmount(), "FINALIZED", lineItemsJson, null, Instant.now());
+         * return invoiceRepository.save(invoice);
+         * } catch (Exception e) {
+         * return Mono.error(e);
+         * }
+         * })
+         * .flatMap(savedInvoice -> {
+         * try {
+         * String pdfUrl = pdfGenerationService.generateInvoicePdf(savedInvoice);
+         * return invoiceRepository.save(savedInvoice.withPdfUrl(pdfUrl));
+         * } catch (IOException e) {
+         * log.error("Failed to generate PDF for invoice {}", savedInvoice.id(), e);
+         * return Mono.just(savedInvoice); // Proceed without PDF URL
+         * }
+         * })
+         * .subscribe(
+         * finalInvoice -> log.info("Successfully generated invoice {} for tenant {}",
+         * finalInvoice.id(),
+         * finalInvoice.tenantId()),
+         * error -> log.error("Error during billing run", error));
+         */
+    }
+
+    // This is our new, public, reusable method
+    public Mono<Invoice> generateInvoiceForTenant(Tenant tenant) {
+        log.info("Generating invoice for tenant: {}", tenant.getId());
+        return pricingService.generateInvoicePreview(tenant.getId())
                 .flatMap(preview -> {
                     try {
-                        String lineItemsJson = objectMapper.writeValueAsString(preview.lineItems());
-                        Invoice invoice = new Invoice(null, preview.tenantId(), null, // planId can be added
-                                Instant.now().minusSeconds(2592000), Instant.now(), // Dummy period
-                                preview.totalAmount(), "FINALIZED", lineItemsJson, null, Instant.now());
+                        String lineItemsJsonString = objectMapper.writeValueAsString(preview.lineItems());
+                        Json lineItemsJsonObject = Json.of(lineItemsJsonString); // <-- WRAP THE STRING
+
+                        Invoice invoice = new Invoice(null, preview.tenantId(), tenant.getPlanId(),
+                                Instant.now().minus(30, ChronoUnit.DAYS), Instant.now(), // Example period
+                                preview.totalAmount(), "FINALIZED", lineItemsJsonObject, null, Instant.now());
                         return invoiceRepository.save(invoice);
                     } catch (Exception e) {
                         return Mono.error(e);
@@ -59,12 +105,9 @@ public class BillingRunService {
                         return invoiceRepository.save(savedInvoice.withPdfUrl(pdfUrl));
                     } catch (IOException e) {
                         log.error("Failed to generate PDF for invoice {}", savedInvoice.id(), e);
-                        return Mono.just(savedInvoice); // Proceed without PDF URL
+                        return Mono.just(savedInvoice);
                     }
-                })
-                .subscribe(
-                        finalInvoice -> log.info("Successfully generated invoice {} for tenant {}", finalInvoice.id(),
-                                finalInvoice.tenantId()),
-                        error -> log.error("Error during billing run", error));
+                });
     }
+
 }
