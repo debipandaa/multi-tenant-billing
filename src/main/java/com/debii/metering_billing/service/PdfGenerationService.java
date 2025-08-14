@@ -47,8 +47,9 @@ public class PdfGenerationService {
         table.addHeaderCell("Unit Price");
         table.addHeaderCell("Subtotal");
 
-        List<LineItem> lineItems = objectMapper.readValue(invoice.lineItemsJson(), new TypeReference<>() {
+        List<LineItem> lineItems = objectMapper.readValue(invoice.lineItemsJson().asString(), new TypeReference<>() {
         });
+
         for (LineItem item : lineItems) {
             table.addCell(item.description());
             table.addCell(String.valueOf(item.quantity()));
