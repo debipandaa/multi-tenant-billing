@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.debii.metering_billing.dto.InvoicePreview;
 // import com.debii.metering_billing.model.pricing.InvoicePreview
 import com.debii.metering_billing.dto.LineItem;
-import com.debii.metering_billing.model.pricing.PricingPlan;
+// import com.debii.metering_billing.model.pricing.PricingPlan;
 import com.debii.metering_billing.model.pricing.MetricPricing;
 import com.debii.metering_billing.model.pricing.PriceTier;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 @Service
 public class PricingService {
@@ -38,13 +40,27 @@ public class PricingService {
                 .flatMap(tenant -> planRepository.findById(tenant.getPlanId()))
                 .flatMap(plan -> {
                     try {
-                        PricingPlan pricingPlan = objectMapper.readValue(plan.pricingJson(), PricingPlan.class);
+                        // PricingPlan pricingPlan = objectMapper.readValue(plan.pricingJson(),
+                        // PricingPlan.class);
+                        // NEW LINES TO ADD:
+                        TypeReference<Map<String, MetricPricing>> typeRef = new TypeReference<>() {
+                        };
+                        Map<String, MetricPricing> pricingMap = objectMapper.readValue(plan.pricingJson(), typeRef);
+
                         List<Mono<LineItem>> lineItemMonos = new ArrayList<>();
 
-                        pricingPlan.pricing().forEach((metric, metricPricing) -> {
+                        // pricingPlan.pricing().forEach((metric, metricPricing) -> {
+                        // Mono<LineItem> mono = usageQueryService.getUsageForCurrentPeriod(tenantId,
+                        // metric)
+                        // .map(aggregate -> aggregate.usageCount())
+                        // .reduce(0L, Long::sum) // Sum up all usage for the metric
+                        // .map(totalUsage -> calculateLineItem(metric, totalUsage, metricPricing));
+                        // lineItemMonos.add(mono);
+                        // });
+                        pricingMap.forEach((metric, metricPricing) -> { // Use pricingMap here
                             Mono<LineItem> mono = usageQueryService.getUsageForCurrentPeriod(tenantId, metric)
                                     .map(aggregate -> aggregate.usageCount())
-                                    .reduce(0L, Long::sum) // Sum up all usage for the metric
+                                    .reduce(0L, Long::sum)
                                     .map(totalUsage -> calculateLineItem(metric, totalUsage, metricPricing));
                             lineItemMonos.add(mono);
                         });
