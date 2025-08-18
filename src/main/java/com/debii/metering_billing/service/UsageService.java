@@ -47,7 +47,7 @@ public class UsageService {
 
                     // Create the full event object
                     UsageEvent event = new UsageEvent(
-                            UUID.randomUUID(),
+                            null,
                             request.tenantId(),
                             null, // userId
                             request.metric(),
