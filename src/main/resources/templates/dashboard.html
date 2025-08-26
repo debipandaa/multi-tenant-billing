@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tenant Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+</head>
+
+<body>
+    <main class="container">
+        <h1 th:text="'Dashboard for ' + ${tenant.name}">Dashboard</h1>
+        <hr />
+
+        <h2>Recent Usage (api_calls)</h2>
+        <div th:if="${usage.isEmpty()}">
+            <p>No usage data recorded for the current period.</p>
+        </div>
+        <table th:unless="${usage.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>Period Start</th>
+                    <th>Usage Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="agg : ${usage}">
+                    <td th:text="${#temporals.format(agg.periodStart, 'dd-MMM-yyyy HH:mm')}"></td>
+                    <td th:text="${agg.usageCount}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <hr />
+
+        <h2>Invoice History</h2>
+        <div th:if="${invoices.isEmpty()}">
+            <p>No invoices found.</p>
+        </div>
+        <table th:unless="${invoices.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>Invoice ID</th>
+                    <th>Date Issued</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="inv : ${invoices}">
+                    <td th:text="${inv.id}"></td>
+                    <td th:text="${#temporals.format(inv.issuedAt, 'dd-MMM-yyyy')}"></td>
+                    <td th:text="'$' + ${#numbers.formatDecimal(inv.totalAmount, 1, 2)}"></td>
+                    <td><span th:text="${inv.status}" class="tag"></span></td>
+                    <td>
+                        <a th:href="@{/api/v1/billing/invoices/{id}/download(id=${inv.id})}">Download PDF</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+</body>
+
+</html>
