@@ -1,0 +1,47 @@
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# IDEs
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Logs
+*.log
+logs/
+*.tmp
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Generated files
+*.class
+*.jar
+*.war
+
+# Generated invoices
+invoices/*.pdf
+
+# Spring Boot
+spring-boot-devtools-*.jar
+
+# Test results
+surefire-reports/
+failsafe-reports/
+
+# Node (if any front-end)
+node_modules/
+dist/
+
+# Environment / config
+application-local.yml
+application-secrets.yml
+.env
