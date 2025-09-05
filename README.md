@@ -6,12 +6,12 @@ This project is a complete, event-driven solution for tracking product usage, ag
 
 ## \#\# Core Features
 
-  * **⚡ High-Throughput Usage Ingestion:** A non-blocking, reactive API (`Spring WebFlux`) for ingesting millions of usage events.
-  * **🛡️ Resilient & Idempotent:** Uses **Kafka** as a durable event buffer and supports deduplication keys to safely handle retries.
-  * **🔄 Real-time Aggregation:** An event-driven consumer that aggregates raw usage data into hourly windows, storing results in **PostgreSQL** and caching in **Redis**.
-  * **💰 Flexible Pricing Engine:** A powerful, JSON-configurable pricing engine that supports complex strategies like **tiered pricing**.
-  * **🤖 Automated Billing & Invoicing:** A scheduled cron job that automatically runs monthly billing, generating immutable invoices and downloadable **PDFs** using iText.
-  * **📊 Web Dashboard:** A simple server-rendered dashboard built with **Thymeleaf** to view tenant usage and invoice history in real-time.
+  * **High-Throughput Usage Ingestion:** A non-blocking, reactive API (`Spring WebFlux`) for ingesting millions of usage events.
+  * **Resilient & Idempotent:** Uses **Kafka** as a durable event buffer and supports deduplication keys to safely handle retries.
+  * **Real-time Aggregation:** An event-driven consumer that aggregates raw usage data into hourly windows, storing results in **PostgreSQL** and caching in **Redis**.
+  * **Flexible Pricing Engine:** A powerful, JSON-configurable pricing engine that supports complex strategies like **tiered pricing**.
+  * **Automated Billing & Invoicing:** A scheduled cron job that automatically runs monthly billing, generating immutable invoices and downloadable **PDFs** using iText.
+  * **Web Dashboard:** A simple server-rendered dashboard built with **Thymeleaf** to view tenant usage and invoice history in real-time.
 
 -----
 
