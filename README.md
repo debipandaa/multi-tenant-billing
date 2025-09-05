@@ -1,10 +1,6 @@
------
-
 # SaaS-Grade Metering & Billing Engine
 
 This project is a complete, event-driven solution for tracking product usage, aggregating it into billable metrics, and generating invoices based on flexible, tiered pricing plans. It's designed to be a robust, scalable backend for any SaaS product that needs usage-based billing.
-
-It's currently **Saturday, September 6, 2025, 12:27 AM** here in India, and this marks the completion of the core features of our project\!
 
 -----
 
